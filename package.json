@@ -1,0 +1,19 @@
+{
+  "name": "devtinder",
+  "version": "1.0.0",
+  "scripts": {
+    "start":"node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [
+    "node js",
+    "javaScript"
+  ],
+  "author": "Tejas kanazriya",
+  "license": "ISC",
+  "description": "Tinder like application for developers",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
