@@ -2,7 +2,7 @@
   "name": "devtinder",
   "version": "1.0.0",
   "scripts": {
-    "start":"node src/app.js",
+    "start": "node src/app.js",
     "dev": "nodemon src/app.js"
   },
   "keywords": [
@@ -13,7 +13,9 @@
   "license": "ISC",
   "description": "Tinder like application for developers",
   "dependencies": {
+    "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "mongoose": "^8.18.0",
     "nodemon": "^3.1.10"
   }
 }
