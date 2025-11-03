@@ -10,9 +10,9 @@ app.use(express.json()) // when reading the req body, it will parse json data.
 app.use(cookieParser()) // to parse the cookie while fetch it.
 
 
-app.use("/", authRouter)
-app.use("/", profileRouter)
-app.use("/", requestRouter)
+app.use("/auth", authRouter)
+app.use("/profile", profileRouter)
+app.use("/request", requestRouter)
 
 connectDB().then(() => {
     console.log("connection Successfully...!")

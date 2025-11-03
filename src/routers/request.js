@@ -1,7 +1,7 @@
 const requestRouter = require('express').Router();
 const { userAuth } = require('../middleware/auth');
 
-requestRouter.post("/request", userAuth, async (req, res) => {
+requestRouter.post("/send", userAuth, async (req, res) => {
     try {
         const user = req.user
         // Here, you can handle the request logic, e.g., saving the request to the database
