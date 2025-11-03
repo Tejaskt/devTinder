@@ -4,8 +4,12 @@ const app = express()
 const User = require("./models/user")
 const { validateSignUpData } = require('./utils/validation');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser')
+const jwt = require("jsonwebtoken")
+const { userAuth } = require('./middleware/auth');
 
-app.use(express.json())
+app.use(express.json()) // when reading the req body, it will parse json data.
+app.use(cookieParser()) // to parse the cookie while fetch it.
 
 app.post("/signup", async (req, res) => {
 
@@ -37,19 +41,30 @@ app.post("/signup", async (req, res) => {
     }
 })
 
-app.post("/login", async(req,res) => {
+app.post("/login",async(req,res) => {
 
     try{
         
         const { emailId, password } = req.body
 
         const user = await User.findOne({ emailId: emailId })
+
         if(!user){
             throw new Error("user is not present")
         }
-
+        
         const isPasswordValid = await bcrypt.compare(password, user.password)
+        
         if(isPasswordValid){
+            // Set the user ID in the cookies
+            const token = await jwt.sign({ _id : user._id}, "Tejaskt" , {
+                expiresIn : "7d"
+            })
+
+            res.cookie("token",token , {
+                expires: new Date(Date.now() + 86400000), // 1 day
+            })
+
             res.send("Login Successfull...!!")
         }else{
             throw new Error("password is not correct...!!")
@@ -59,6 +74,15 @@ app.post("/login", async(req,res) => {
     }
 })
 
+app.get("/profile", userAuth, async (req, res) => {
+    try {
+        const user = req.user
+        res.send(user)  
+        
+    } catch (err) {
+        res.status(400).send("Error " + err.message)
+    }   
+})
 
 connectDB().then(() => {
     console.log("connection Successfully...!")
