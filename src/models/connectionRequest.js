@@ -20,6 +20,11 @@ const connectionRequestSchema = new mongoose.Schema({
     }
 },{ timestamps: true })
 
+// Set compound index on fromUserId and toUserId to ensure uniqueness
+connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 }, { unique: true });
+
+
+
 //validation for not send the request to user itself
 connectionRequestSchema.pre('save', async function(next) {
     const connectionRequest = this
