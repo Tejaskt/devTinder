@@ -52,6 +52,10 @@ userRouter.get("/feed", userAuth, async (req,res)=>{
 
         // feed api to get all users except logged in user and users already connected or requested or ignored
         const loggedInUser = req.user
+        const page = parseInt(req.query.page) || 1
+        let limit = parseInt(req.query.limit) || 10
+        limit = Math.min(limit, 50) // max limit is 50
+        const skip = (page - 1) * limit
 
         const ignoredUsers = await ConnectionRequest.find({
             fromUserId: loggedInUser._id,
@@ -83,7 +87,7 @@ userRouter.get("/feed", userAuth, async (req,res)=>{
 
         const feedUsers = await user.find({
             _id: { $nin: allConnectedUsers }
-        }).select("firstName lastName age photoUrl about skills")
+        }).select("firstName lastName age photoUrl about skills").skip(skip).limit(limit)
 
         res.json({
             message: "Feed fetched successfully",
