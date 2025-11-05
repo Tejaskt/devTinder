@@ -1,6 +1,7 @@
 const userRouter = require('express').Router()
 const { userAuth } = require('../middleware/auth')
 const ConnectionRequest = require('../models/connectionRequest')
+const user = require('../models/user')
 
 // get the pending connection requests for the logged in user
 userRouter.get("/requests/received",userAuth, async (req,res)=>{
@@ -44,6 +45,54 @@ userRouter.get("/connections", userAuth, async (req,res)=>{
     } catch (err) {
         res.status(400).send("ERROR: " + err.message)
     }
+})
+
+userRouter.get("/feed", userAuth, async (req,res)=>{
+    try {
+
+        // feed api to get all users except logged in user and users already connected or requested or ignored
+        const loggedInUser = req.user
+
+        const ignoredUsers = await ConnectionRequest.find({
+            fromUserId: loggedInUser._id,
+            status: "ignore"
+        }).distinct("toUserId")
+
+        const requestedUsers = await ConnectionRequest.find({
+            fromUserId: loggedInUser._id,
+            status: "interested"
+        }).distinct("toUserId")
+
+        const acceptedUsers = await ConnectionRequest.find({
+            fromUserId: loggedInUser._id,
+            status: "accepted"
+        }).distinct("toUserId")
+
+        const rejectedUsers = await ConnectionRequest.find({
+            fromUserId: loggedInUser._id,
+            status: "rejected"
+        }).distinct("toUserId")
+
+        const allConnectedUsers = [...new Set([
+            ...ignoredUsers.map(String), 
+            ...requestedUsers.map(String), 
+            ...acceptedUsers.map(String), 
+            ...rejectedUsers.map(String), 
+            String(loggedInUser._id)    
+        ])]
+
+        const feedUsers = await user.find({
+            _id: { $nin: allConnectedUsers }
+        }).select("firstName lastName age photoUrl about skills")
+
+        res.json({
+            message: "Feed fetched successfully",
+            data: feedUsers
+        })
+
+    }catch (err) {
+        res.status(400).send("ERROR: " + err.message)
+    }   
 })
 
 
