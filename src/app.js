@@ -6,7 +6,9 @@ const authRouter = require('./routers/auth');
 const profileRouter = require('./routers/profile');
 const requestRouter = require('./routers/request');
 const userRouter = require('./routers/user');
+const cors = require('cors');
 
+app.use(cors()) // to allow cross origin requests
 app.use(express.json()) // when reading the req body, it will parse json data.
 app.use(cookieParser()) // to parse the cookie while fetch it.
 
