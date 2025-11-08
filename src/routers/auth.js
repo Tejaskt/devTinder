@@ -57,7 +57,10 @@ authRouter.post("/login",async(req,res) => {
                 expires: new Date(Date.now() + 86400000), // 1 day
             })
 
-            res.send(user)
+            res.json({
+                message: "Login Successful...!!",
+                data:user
+            })
         }else{
             throw new Error("password is not correct...!!")
         }
