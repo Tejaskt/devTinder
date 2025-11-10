@@ -29,7 +29,7 @@ authRouter.post("/signup", async (req, res) => {
         })
 
         await user.save()
-        res.send("user create Successfully...")
+        res.status(201).send("user create Successfully...")
     } catch (err) {
         res.status(400).send("error saving the user:" + err.message)
     }
@@ -44,7 +44,7 @@ authRouter.post("/login",async(req,res) => {
         const user = await User.findOne({ emailId: emailId })
 
         if(!user){
-            throw new Error("user is not present")
+            return res.status(400).send("User is not present")
         }
         
         const isPasswordValid = await user.passwordcheck(password)
@@ -59,7 +59,7 @@ authRouter.post("/login",async(req,res) => {
 
             res.send(user)
         }else{
-            throw new Error("password is not correct...!!")
+            return res.status(400).send("password is not correct...!!")
         }
     }catch(err){
         res.status(400).send("error Login the User: " + err.message)
