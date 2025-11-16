@@ -85,15 +85,11 @@ userRouter.get("/feed", userAuth, async (req,res)=>{
             String(loggedInUser._id)    
         ])]
 
-        const feedUsers = await user.find({
+        const users = await user.find({
             _id: { $nin: allConnectedUsers }
         }).select("firstName lastName age photoUrl about skills").skip(skip).limit(limit)
 
-        res.json({
-            message: "Feed fetched successfully",
-            data: feedUsers
-        })
-
+        res.send(users)
     }catch (err) {
         res.status(400).send("ERROR: " + err.message)
     }   
