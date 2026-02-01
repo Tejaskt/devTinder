@@ -6,6 +6,7 @@ const authRouter = require('./routers/auth');
 const profileRouter = require('./routers/profile');
 const requestRouter = require('./routers/request');
 const userRouter = require('./routers/user');
+const chatrouter = require('./routers/chat'); //new
 const cors = require('cors');
 
 app.use(cors({
@@ -20,6 +21,7 @@ app.use("/auth", authRouter)
 app.use("/profile", profileRouter)
 app.use("/request", requestRouter)
 app.use("/user", userRouter)
+app.use("/",chatrouter) // new
 
 connectDB().then(() => {
     console.log("connection Successfully...!")
